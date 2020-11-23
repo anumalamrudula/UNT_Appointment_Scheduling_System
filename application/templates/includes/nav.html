@@ -1,0 +1,93 @@
+    <header>
+        <nav>
+            <ul class="nav nav-pills">
+
+                {% if not session['username'] %}
+                <li class="nav-item">
+                    <a href="{{ url_for('index') }}" class="nav-link {% if home %} active {% endif %}">Home</a>
+                </li>
+                {% else %}
+                    {% if session['role']=="student" %}
+                    <li class="nav-item">
+                        <a href="{{ url_for('studentscalendar') }}" class="nav-link {% if studentscalendar %} active {% endif %}">
+                        <img border="0" title="Calendar" src="{{ url_for('static', filename='images/calendar.png') }}" width="25" height="25">
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{ url_for('studenthome') }}" class="nav-link {% if home %} active {% endif %}">Requests</a>
+                    </li>
+                    {% elif session['role']=="staff"  %}
+                     <li class="nav-item">
+                        <a href="{{ url_for('profcalendar') }}" class="nav-link {% if profcalendar %} active {% endif %}">
+                        <img border="0" title="Calendar" src="{{ url_for('static', filename='images/calendar.png') }}" width="25" height="25">
+                        </a>
+                     </li>
+                    <li class="nav-item">
+                        <a href="{{ url_for('staffhome') }}" class="nav-link {% if home %} active {% endif %}">Upcoming Appointments</a>
+                    </li>
+                    {% elif session['role']=="admin"  %}
+                    <li class="nav-item">
+                        <a href="{{ url_for('adminhome') }}" class="nav-link {% if home %} active {% endif %}">Scheduled Appointments</a>
+                    </li>
+                    {% endif %}
+                {% endif %}
+
+                {% if not session['username'] %}
+                <li class="nav-item">
+                    <a href="{{ url_for('register') }}" class="nav-link {% if register %} active {% endif %}">Register</a>
+                </li>
+                {% endif %}
+
+                {% if not session['username'] %}
+                <li class="nav-item">
+                    <a href="{{ url_for('login') }}" class="nav-link {% if login %} active {% endif %}">Login</a>
+                </li>
+                {% else %}
+                    {% if session['role']=="student" %}
+                    <li class="nav-item">
+                        <a href="{{ url_for('appointments') }}" class="nav-link {% if appointments %} active {% endif %}">Schedule Appointment</a>
+                    </li>
+                    <li class = "nav-item">
+                        <a href="{{ url_for('updateprofile') }}" class="nav-link {% if updateprofile %} active {% endif %}">Update Profile</a>
+                    </li>
+                    {% elif session['role']=="staff" %}
+                    <li class="nav-item">
+                        <a href="{{ url_for('appointments') }}" class="nav-link {% if appointments %} active {% endif %}">Appointment Requests</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{ url_for('manageProfSlots') }}" class="nav-link {% if manageProfSlots %} active {% endif %}">Manage Slots</a>
+                    </li>
+                    <li class = "nav-item">
+                        <a href="{{ url_for('updateprofile') }}" class="nav-link {% if updateprofile %} active {% endif %}">Update Profile</a>
+                    </li>
+                    {% elif session['role']=="admin" %}                    
+                    <li class="nav-item">
+                        <a href="{{ url_for('addHolidays') }}" class="nav-link {% if addholidays %} active {% endif %}">Add Holidays</a>
+                    </li>
+                    <div class="dropdown nav-item">
+                        <button class="dropbtn">Manage Users
+                          <i class="arrow down"></i>
+                        </button>
+                        <div class="dropdown-content">
+                            <li class="nav-item">
+                                <a href="{{ url_for('usersDetails') }}" class="nav-link {% if usersdetails %} active {% endif %}">Users Details</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{{ url_for('authorizeMailID') }}" class="nav-link {% if authorizeMailID %} active {% endif %}">Authorize Mail IDs</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{{ url_for('addprofessor') }}" class="nav-link {% if addprofessor %} active {% endif %}">Add Professor</a>
+                            </li>
+                        </div>
+                    </div>
+                    {% endif %}
+                <li class="nav-item">
+                    <a href="{{ url_for('logout') }}" class="nav-link">
+                        <img border="0" title="Logout" src="{{ url_for('static', filename='images/logout.png') }}" width="25" height="25">
+                    </a>
+                </li>
+                {% endif %}
+            </ul>
+        </nav>
+        <hr style="clear:both">
+    </header>

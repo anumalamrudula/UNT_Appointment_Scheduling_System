@@ -1,0 +1,60 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12 text-center">
+        {% if not students or  (maxDate["date"] < todayDate) %}
+            <h2>You have no appointment requests professor.</h2>
+        {% else %}
+            <br>
+            <h2>Your requested appointments are:</h2>
+            <br>
+            <table class="table table-hover">
+                <thead>
+                    <tr style="background-color:green;color:white">
+                        <th scope="col">Name</th>
+                        <th scope="col">Mail ID</th>
+                        <th scope="col">Date</th>
+                        <th scope="col">Time Slot</th>
+                        <th scope="col">Approve</th>
+                        <th scope="col">Cancel (Comment)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for student in students %}
+                        {% if student.r1["date"] > today %}
+                        <tr>
+                            <td scope='row'>{{ student.r2["first_name"]+" "+student.r2["last_name"] }}</td>
+                            <td>{{ student.r2["email"] }}</td>     
+                            <td>{{ student.r1["date"] }}</td>     
+                            <td>{{ student.r1["slot"] }}</td>     
+                            <td>
+                                <form action="{{url_for('schedule')}}" method="POST">
+                                    <input type="hidden" name="user_id" value="{{ student.r2['user_id'] }}"> 
+                                    <input type="hidden" name="student_mail" value="{{ student.r2['email'] }}">  
+                                    <input type="hidden" name="student_name" value="{{ student.r2['first_name'] }}"> 
+                                    <input type="hidden" name="id" value="{{ student.r1['id'] }}"> 
+                                    <input type="hidden" name="req" value="approve"> 
+                                    <button>Approve</button>
+                                </form> 
+                            </td>    
+                            <td>
+                                <form action="{{url_for('schedule')}}" method="POST">
+                                    <input type="hidden" name="user_id" value="{{ student.r2['user_id'] }}">
+                                    <input type="hidden" name="student_mail" value="{{ student.r2['email'] }}">
+                                    <input type="hidden" name="student_name" value="{{ student.r2['first_name'] }}"> 
+                                    <input type="hidden" name="id" value="{{ student.r1['id'] }}"> 
+                                    <input type="hidden" name="req" value="cancel"> 
+                                    <button>Cancel</button>                                    
+                                    <input type="text" name="comment">
+                                </form>  
+                            </td> 
+                        </tr>
+                        {% endif %}
+                    {% endfor %}                    
+                </tbody>
+            </table>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

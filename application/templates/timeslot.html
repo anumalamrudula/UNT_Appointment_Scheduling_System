@@ -1,0 +1,43 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div>
+    <table class="table table-hover">
+        <thead>
+            <tr style="background-color:green;color:white">
+                <th scope="col">Professor</th>
+                <th scope="col">Date</th>
+                <th scope="col">Pick Time Slot</th>
+                <th scope="col">Cancel</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td scope='row'>{{ prof_name }}</td>
+                <td>{{ date }}</td>
+                <td>
+                    <form action="{{url_for('schedule')}}" method="POST">
+                        {{ form.csrf_token }}
+                        <input type="hidden" name="date_value" value="{{ date }}">
+                        <input type="hidden" name="prof_id" value="{{ prof_id }}">  
+                        <input type="hidden" name="prof_name" value="{{ prof_name }}"> 
+                        <input type="hidden" name="re_req" value="{{ req }}"> 
+                        <input type="hidden" name="id" value="{{ rec_id }}"> 
+                        <select class="form" name="slot_value"> 
+                            {% for choice in form.slot.choices %}
+                                <option value="{{ choice }}">{{ choice }}</option>
+                            {% endfor %}
+                        </select>
+                        <input type="submit" value="Schedule">
+                    </form>
+                </td>
+                <td>
+                    <form action="{{url_for('appointments')}}" method="POST">
+                        <button>Cancel</button>
+                    </form>  
+                </td> 
+            </tr>   
+        </tbody>
+    </table>
+</div>
+{% endblock %}

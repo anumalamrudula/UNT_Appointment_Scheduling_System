@@ -1,0 +1,19 @@
+{% extends "layout.html" %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-md-12 text-center">
+            <h2>Welcome to the University of North Texas !</h2>
+            <br>
+            <h4 style="color:green"><b>This an online appointment scheduling application for the university students</b></h4>
+            <br>
+            {% if session['username'] %}
+                <h3>Let's get started.</h3>
+                <h5 style="text-align:left;">Appointment Scheduling Home Page</h5>
+            {% else %}
+                <p>Trying to SignIn for the first time? <a href="{{ url_for('register') }}"><b>Register</b></a> Here</p>
+                <p>Already registered? <a href="{{ url_for('login') }}"><b>Login</b></a> Here</p>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}

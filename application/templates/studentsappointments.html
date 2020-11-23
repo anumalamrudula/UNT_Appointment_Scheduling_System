@@ -1,0 +1,87 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<h1>{{ title }} </h1>
+<div class="row">
+    <div class="col-md-12 text-center">
+        <br>
+        <h4 style="text-align:left;">Schedule an appointment with a professor:</h4>
+        <h6 style="text-align:left;">(Appointment must be requested atleast one day before)</h6>
+        <div>
+            <input type="text" id="mySearch" style="background: transparent;float: left;border: 1px solid black;" onkeyup="myFunction()" placeholder="Search by Professor Name">
+            <table class="table table-hover" id="myTable">
+                <thead>
+                    <tr style="background-color:green;color:white">
+                        <th scope="col">ID</th>
+                        <th scope="col">Name</th>
+                        <th scope="col">Designation</th>
+                        <th scope="col">Department</th>
+                        <th scope="col">Mail ID</th>
+                        <th scope="col">Schedule</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for data in ProfData %}
+                    
+                    <tr>
+                        <td scope='row'>{{ data["prof_id"] }}</td>
+                        <td>{{ data["Name"] }}</td>
+                        <td>{{ data["Designation"] }}</td>
+                        <td>{{ data["Dept"] }}</td>
+                        <td>{{ data["MailID"] }}</td>
+                        <td>
+                            <form action="{{url_for('schedule')}}" method="POST">
+                                <input type="hidden" name="prof_name" value="{{data['Name']}}">
+                                <input type="hidden" name="Dept" value="{{data['Dept']}}">
+                                <input type="hidden" name="prof_id" value="{{data['prof_id']}}">                                  
+                                <input type="hidden" name="user_id" value="{{user_id}}">
+                                <!-- <input placeholder="Date in YYYY-MM-DD" type="date" id="birthdaytime" name="birthdaytime" onchange= "checkDate()" required> -->
+                                <input type="date" id="birthdaytime" name="birthdaytime" required>
+                                <script> 
+                                    var today = new Date(new Date().getTime() + 24 * 60 * 60 * 1000).toISOString().split('T')[0];
+                                    var x = document.getElementsByName("birthdaytime");
+                                    for (var i = 0; i < (x.length); i++)                                     
+                                    {
+                                        x[i].setAttribute('min', today);
+                                    }                
+                                </script>                         
+                                <meta id="my_holidaylist" data-holidaylist="{{ holidaylist }}">
+                                <script type="text/javascript">
+                                    const picker = document.getElementById('birthdaytime'); 
+                                    picker.addEventListener('input', function(e, holidays)
+                                    {
+                                        var today = new Date(this.value);
+                                        today.setDate(today.getDate() + 1);
+                                        var dd = String(today.getDate()).padStart(2, '0');
+                                        var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+                                        var yyyy = today.getFullYear();
+                                        todaysDate = mm+ '/' + dd + '/' + yyyy;
+                                        var holidays = '{{ holidaylist }}';
+                                        if(holidays.includes(todaysDate))
+                                        {
+                                            e.preventDefault();
+                                            this.value = '';
+                                            alert(todaysDate + ' is a holiday. Please pick another date');
+                                        }
+                                    }); 
+
+                                    function checkDate() {
+                                        var selectedText = document.getElementById('birthdaytime').value;
+                                        var selectedDate = new Date(selectedText);
+                                        var now = new Date();
+                                        if (selectedDate < now) {
+                                            alert("Date must be in the future");
+                                            }
+                                    }         
+                                </script>
+                                <input type="submit" class="button -green center" value="Check Slots">
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}                    
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

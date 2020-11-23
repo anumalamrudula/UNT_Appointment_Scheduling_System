@@ -1,0 +1,126 @@
+{% extends "layout.html" %}
+
+{% block content %}
+    <h3 style = "text-align: center">Add New University Members (students/professors) Email IDs</h3>
+    <h6 style = "text-align: center">Only authorized users can Register</h6>
+    <br>
+    <br>
+    <h5 style = "text-align: center">Add single Email ID or Email IDs just seperated by comma/space</h5>
+    <h6 style = "text-align: center">(Ex: TestStudent@my.unt.edu,TestProfessor@unt.edu)</h6>
+    <div  class="container">
+    <div>
+        <form name="login" action="" method="post" novalidate>
+            <fieldset class="form-group">
+                <br>
+                {{ form.hidden_tag() }}
+                <p>
+                    <center>
+                        {{ form.email.label }}<br>
+                        {{ form.email(rows='5',cols='100') }}
+                        {% for error in form.email.errors %}
+                            <span class="error-message">{{ error }}</span>
+                        {% endfor %}
+                    </center>
+                </p>
+                <p title="Only authorized users can register to application">
+                    <center>
+                        <input type="submit" name="mailID_submit" value="Submit">
+                    </center>
+                </p>
+                {% if unsuccessfulEntries %}
+                  <table class="center" border="1">
+                    <tr>
+                        <th colspan="2" class="failed_entries_header">
+                            <center> Failed Entries</center>
+                        </th>
+                    </tr>
+                    <tr>
+                        <th>
+                            <center> Email ID </center>
+                        </th>
+                        <th>
+                            <center> Issue Type </center>
+                        </th>
+                    </tr>
+                      {% for entry in unsuccessfulEntries %}
+                      <tr>
+                          <td> {{ entry[0] }} </td>
+                          <td> {{ entry[1] }} </td>
+                      </tr>
+                      {% endfor %}
+                  </table>
+                {% endif %}
+
+            </fieldset>
+        </form>
+    </div>
+    <br>
+    <h3>Authorized Users:</h3>
+
+    <form action="{{ url_for('authorizeMailID') }}" method="POST" style="text-align:left;">
+        <label class="radio-inline">
+            <input type="radio" name="option" value="staff"> Professors(Staff) </input>
+        </label>
+        <label class="radio-inline">
+            <input type="radio" name="option" value="student"> Students </input>
+        </label>
+        <label class="radio-inline">
+            <input type="radio" name="option" value="admin"> Admin </input>
+        </label>
+        <input type="submit" name="Viewing_Details" value="Filter">
+    </form>
+    <br>
+    {% if option == "staff" %}
+        <h5 style="text-align:left;">List of Professors :</h5>
+    {% elif option == "student" %}
+        <h5 style="text-align:left;">List of Students :</h5>
+    {% elif option == "admin" %}
+        <h5 style="text-align:left;">List of Admins :</h5>
+    {% endif %}
+   <input type="text" id="mySearch" style="background: transparent;float: left;border: 1px solid black;" onkeyup="myFunction()" placeholder="Search by Mail ID">
+    <table class="table table-hover" id="myTable">
+        <thead>
+            <tr style="background-color:green;color:white">
+                <th scope="col">ID</th>
+                <th scope="col">Mail ID</th>
+                <th scope="col">Role</th>
+                <th scope="col">Unauthorize User</th>
+            </tr>
+        </thead>
+        <tbody>
+                {% for authorizedUser in authorizedUsers %}
+                    {% if not option %}
+                        <tr>
+                            <td scope='row'>{{ authorizedUser["user_id"] }}</td>
+                            <td>{{ authorizedUser["email"] }}</td>
+                            <td>{{ authorizedUser["role"] }}</td>
+                            <td>
+                                <form action="{{url_for('authorizeMailID')}}" method="POST">
+                                    <input type="hidden" name="deleteAuthorizedUser" value="{{authorizedUser['user_id']}}">
+                                    <input type="hidden" name="emailDeleteUser" value="{{authorizedUser['email']}}">
+                                    <input type="hidden" name="roleDeleteUser" value="{{authorizedUser['role']}}">
+                                    <input type="submit" title="Unauthorized users cannot Register to application unless authorized again by admin  (for Graduated / Left University)" class="button -green center" value="Unauthorize">
+                                </form>
+                            </td>
+                        </tr>
+                    {% else %}
+                        {% if authorizedUser["role"] == option %}
+                        <tr>
+                            <td scope='row'>{{ authorizedUser["user_id"] }}</td>
+                            <td>{{ authorizedUser["email"] }}</td>
+                            <td>{{ authorizedUser["role"] }}</td>
+                            <td>
+                                <form action="{{url_for('authorizeMailID')}}" method="POST">
+                                    <input type="hidden" name="deleteAuthorizedUser" value="{{authorizedUser['user_id']}}">
+                                    <input type="submit" title="Unauthorized users cannot Register to application unless authorized again by admin  (for Graduated / Left University)" class="button -green center" value="Unauthorize">
+                                </form>
+                            </td>
+                        </tr>
+                        {% endif %}
+                    {% endif %}
+                {% endfor %}
+            </form>
+        </tbody>
+    </table>
+</div>
+{% endblock %}

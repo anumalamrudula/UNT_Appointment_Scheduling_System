@@ -1,0 +1,54 @@
+{% extends "layout.html" %} {% block content %}
+
+<div id="calendar">
+</div>
+<script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.3.2/main.js"></script>
+<script>
+    function to24(string, type) {
+        console.log("string", string)
+        console.log("type", type)
+        if (type === "AM" || string.split(":")[0] === "12") {
+            if (string.split(":")[0].length !== 2) {
+                string = "0" + string
+            }
+            return string + ":00"
+        } else if (type === "PM") {
+            return String(parseInt(string.split(":")[0]) + 12) + ":" + string.split(":")[1] + ":00"
+        }
+    }
+
+    let temp = `{{students | tojson }}`
+    let events = []
+    temp = temp.slice(1, -1)
+    temp = JSON.parse(temp)
+    console.log(temp)
+    for (let i = 0; i < temp.length; i++) {
+        let tempevent = {}
+        let start = ""
+        let end = ""
+        tempevent.title = `\nMeeting with ${temp[i].r2["first_name"]}`
+        start = start + temp[i].r1["date"].split(" ")[0] + "T"
+        start = start + to24(temp[i].r1["slot"].split(" ")[0], temp[i].r1["slot"].split(" ")[1])
+        end = end + temp[i].r1["date"].split(" ")[0] + "T"
+        end = end + to24(temp[i].r1["slot"].split(" ")[3], temp[i].r1["slot"].split(" ")[4])
+        tempevent.start = start
+        tempevent.end = end
+        events.push(tempevent)
+    }
+    console.log(events)
+    document.addEventListener('DOMContentLoaded', function() {
+        var calendarEl = document.getElementById('calendar');
+        var calendar = new FullCalendar.Calendar(calendarEl, {
+            initialView: 'dayGridMonth',
+            navLinks: true,
+            headerToolbar: {
+                left: 'prev,next today',
+                center: 'title',
+                right: 'dayGridMonth,timeGridWeek,timeGridDay,listMonth'
+            },
+            events: events
+        });
+        calendar.render();
+    });
+</script>
+{% endblock %}

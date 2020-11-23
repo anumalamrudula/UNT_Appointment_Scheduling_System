@@ -1,0 +1,49 @@
+{% extends "layout.html" %}
+   
+{% block content %}
+   <h3 style = "text-align: left">Add New Professors</h3> 
+   <br> 
+    <legend>{{title}}</legend>   
+    <div class="container">
+    <div class="col-md-8 offset-md-4">
+         <form name="login" action="" method="post" novalidate>
+         <fieldset class="form-group">  
+                {{ form.hidden_tag() }}    
+
+                <p> {{ form.Name.label }}</br>
+                    {{ form.Name }}
+                    {% for error in form.Name.errors %}
+                     <span class="error-message">{{ error }}</span>
+                    {% endfor %}
+                </p>
+            
+                <p> {{ form.Dept.label }}</br>
+                    {{ form.Dept }}
+                    {% for error in form.Dept.errors %}
+                     <span class="error-message">{{ error }}</span>
+                    {% endfor %}
+                </p>
+
+                <p> {{ form.Designation.label }}</br>
+                    {{ form.Designation }}
+                    {% for error in form.Designation.errors %}
+                     <span class="error-message">{{ error }}</span>
+                    {% endfor %}
+                </p>
+            
+                <p> {{ form.MailID.label }}</br>
+                    {{ form.MailID }}
+                    {% for error in form.MailID.errors %}
+                     <span class="error-message">{{ error }}</span>
+                    {% endfor %}
+                </p>
+            
+                <p> 
+                    {{ form.submit() }}
+                </p>
+            
+        </fieldset>
+        </form>
+    </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,65 @@
+{% extends "layout.html" %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-md-12 text-center"> 
+            <h4 style="text-align:left;">User Details</h4>
+            <form action="{{ url_for('usersDetails') }}" method="POST" style="text-align:left;">                           
+                <label class="radio-inline"> 
+                    <input type="radio" name="option" value="staff"> Professors(Staff) </input> 
+                </label>                                    
+                <label class="radio-inline"> 
+                    <input type="radio" name="option" value="student"> Students </input> 
+                </label>                                   
+                <label class="radio-inline"> 
+                    <input type="radio" name="option" value="admin"> Admin </input> 
+                </label>
+                <input type="submit" value="Filter">
+            </form>
+            <br>
+            {% if option == "staff" %}
+                <h5 style="text-align:left;">List of Professors :</h5>
+            {% elif option == "student" %}
+                <h5 style="text-align:left;">List of Students :</h5>
+            {% elif option == "admin" %}
+                <h5 style="text-align:left;">List of Admins :</h5>
+            {% endif %} 
+            <table class="table table-hover">
+                <thead>
+                    <tr style="background-color:green;color:white">
+                        <th scope="col"> User ID</th>
+                        <th scope="col">First Name</th>
+                        <th scope="col">Last Name</th>
+                        <th scope="col">Email</th>
+                        <th scope="col">Role</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% if not option %}
+                        {% for user in users %}
+                            <tr>
+                                <td scope='row'>{{ user["user_id"] }}</td>
+                                <td>{{ user["first_name"] }}</td>
+                                <td>{{ user["last_name"] }}</td>
+                                <td>{{ user["role"] }}</td>
+                                <td>{{ user["email"] }}</td>                    
+                            </tr>
+                        {% endfor %} 
+                    {% else %}   
+                        {% for user in users %}
+                            {% if user["role"] == option %}
+                            <tr>
+                                <td scope='row'>{{ user["user_id"] }}</td>
+                                <td>{{ user["first_name"] }}</td>
+                                <td>{{ user["last_name"] }}</td>
+                                <td>{{ user["email"] }}</td>
+                                <td>{{ user["role"] }}</td>
+                            </tr>
+                            {% endif %} 
+                        {% endfor %} 
+                    {% endif %}     
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}

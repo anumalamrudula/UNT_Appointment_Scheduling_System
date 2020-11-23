@@ -1,0 +1,74 @@
+{% extends "layout.html" %}
+
+{% block content %}
+    <div>
+        <h3>Check/Manage your Availability</h3>   
+        <br>     
+        <form action="{{url_for('manageProfSlots')}}" method="POST">
+            <script>
+                var today = new Date().toISOString().split('T')[0];
+                x = document.getElementsByName("birthdaytime")
+                for (var i = 0; i < (x.length)+1; i++)                                     
+                {
+                    x[i].setAttribute('min', today);
+                }                    
+            </script>
+            <input type="date" id="birthdaytime" name="date" required>
+            <meta id="my_holidaylist" data-holidaylist="{{ holidaylist }}">
+            <script type="text/javascript">
+                const picker = document.getElementById('birthdaytime'); 
+                picker.addEventListener('input', function(e, holidays)
+                {
+                    var today = new Date(this.value);
+                    today.setDate(today.getDate() + 1);
+                    var dd = String(today.getDate()).padStart(2, '0');
+                    var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+                    var yyyy = today.getFullYear();
+                    todaysDate = mm+ '/' + dd + '/' + yyyy;
+                    var holidays = '{{ holidaylist }}';
+                    if(holidays.includes(todaysDate))
+                    {
+                        e.preventDefault();
+                        this.value = '';
+                        alert(todaysDate + ' is set as holiday !!');
+                    }
+                });            
+            </script>
+            <input type="submit" class="button -green center" value="Check">
+        </form>
+        <br>  
+        <br>      
+        {% if profSlots %}
+        <h3 style="padding: 0px;">Slots Availability for {{ date }}:</h3>
+        <hr style ="height: 0.3px;margin-top: 0.5px;">
+        <h5 style="font-style: italic;">(Checked slots are considered as blocked)</h5> 
+        <table class="table table-hover">
+            <thead>
+                <tr style="background-color:green;color:white">
+                    <th scope="col">Slot No. </th>
+                    <th scope="col">Slot Time </th>
+                    <th scope="col">Blocked</th>
+                </tr>
+            </thead>
+            <tbody>  
+                <form action="{{url_for('manageProfSlots')}}" method="POST">
+                    <input type="hidden" name="date" value="{{ date }}">
+                    <input type="hidden" name="prof_id" value="{{ prof_id }}"> 
+                    {% for slot in slotsList %}
+                        <tr>
+                            <td> {{ slotsList.index(slot) + 1}} </td>
+                            <td>{{ slot }}</td>
+                            <td>
+                                <input type="checkbox" class="form-control" id="IsValid" name="block" value= {{ slotsList.index(slot) }} {% if profSlots["slots"][slotsList.index(slot)]==1 %}checked{% else %}{% endif %}>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    <input type="submit" class="button -green center" value="Update" style="float: right;">           
+                </form>
+            </tbody>
+        </table>
+        {% endif %}
+        <br>
+        <br>
+    </div>
+{% endblock %}

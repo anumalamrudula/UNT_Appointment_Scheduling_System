@@ -1,0 +1,94 @@
+{% extends "layout.html" %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-md-12 text-center"> 
+            {% if login %}                   
+                <!-- <h2>Welcome to UNT Appointment Application !</h2> -->
+                <br>
+                {% if not profs %}
+                    <h2>You have no appointments scheduled.</h2>
+                {% else %}
+                    <h4 style="text-align:left;">Your scheduled appointments are:</h4>
+                    <table class="table table-hover">
+                        <thead>
+                            <tr style="background-color:green;color:white">
+                                <th scope="col"> Professor Name</th>
+                                <th scope="col">Department</th>
+                                <th scope="col">Mail ID</th>
+                                <th scope="col">Date</th>
+                                <th scope="col">Time Slot</th>
+                                <th scope="col">Status</th>
+                                <th scope="col">Reschedule</th>
+                                <th scope="col">Cancel</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for prof in profs %}
+                                {% if prof.r1["date"] > today %}
+                                <tr>
+                                    <td scope='row'>{{ prof.r2["Name"] }}</td>
+                                    <td>{{ prof.r2["Dept"] }}</td>
+                                    <td>{{ prof.r2["MailID"] }}</td>  
+                                    <td>{{ prof.r1["date"] }}</td>
+                                    <td>{{ prof.r1["slot"] }}</td>  
+                                    <td>{{ prof.r1["status"] }}</td>    
+                                    <td>
+                                        <form action="{{url_for('schedule')}}" method="POST">
+                                            <input type="hidden" name="prof_id" value="{{ prof.r2['prof_id'] }}">
+                                            <input type="hidden" name="prof_name" value="{{ prof.r2['Name'] }}"> 
+                                            <input type="hidden" name="id" value="{{ prof.r1['id'] }}"> 
+                                            <input type="hidden" name="req" value="reschedule">                                             
+                                            <input placeholder="Date in YYYY-MM-DD" type="date" id="birthdaytime" name="birthdaytime" required>
+                                            <script>
+                                                var today = new Date(new Date().getTime() + 24 * 60 * 60 * 1000).toISOString().split('T')[0];
+                                                x = document.getElementsByName("birthdaytime")
+                                                for (var i = 0; i < (x.length)+1; i++)                                     
+                                                {
+                                                    x[i].setAttribute('min', today);
+                                                }                    
+                                            </script>                         
+                                            <meta id="my_holidaylist" data-holidaylist="{{ holidaylist }}">
+                                            <script type="text/javascript">
+                                                const picker = document.getElementById('birthdaytime'); 
+                                                picker.addEventListener('input', function(e, holidays)
+                                                {
+                                                    var today = new Date(this.value);
+                                                    today.setDate(today.getDate() + 1);
+                                                    var dd = String(today.getDate()).padStart(2, '0');
+                                                    var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+                                                    var yyyy = today.getFullYear();
+                                                    todaysDate = mm+ '/' + dd + '/' + yyyy;
+                                                    var holidays = '{{ holidaylist }}';
+                                                    if(holidays.includes(todaysDate))
+                                                    {
+                                                        e.preventDefault();
+                                                        this.value = '';
+                                                        alert(todaysDate + ' is a holiday. Please pick another date');
+                                                    }
+                                                });            
+                                            </script>
+                                            <input type="submit" class="button -green center" value="Check Slots">
+                                        </form>  
+                                    </td> 
+                                    <td>
+                                        <form action="{{url_for('schedule')}}" method="POST">
+                                            <input type="hidden" name="prof_id" value="{{ prof.r2['prof_id'] }}">
+                                            <input type="hidden" name="prof_name" value="{{ prof.r2['Name'] }}"> 
+                                            <input type="hidden" name="id" value="{{ prof.r1['id'] }}"> 
+                                            <input type="hidden" name="req" value="cancel"> 
+                                            <button>Cancel</button>
+                                        </form>  
+                                    </td>                            
+                                </tr>
+                                {% endif %}
+                            {% endfor %}                
+                        </tbody>
+                    </table>
+                {% endif %}
+            {% else %}
+                <p>Already registered? <a href="{{ url_for('login') }}">Login</a></p>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,34 @@
+{% extends "layout.html" %}
+   
+{% block content %}
+<div class="row">
+    <div class="col-md-8 offset-md-4">
+        <form name="reset_request" action="" method="post" novalidate>
+            <fieldset class="form-group">
+                <legend>{{title}}</legend> 
+                <br>
+                {{ form.hidden_tag() }}
+
+                <p>
+                    {{ form.password.label }}<br>
+                    {{ form.password(size=35) }}
+                    {% for error in form.password.errors %}
+                        <span class="error-message">{{ error }}</span>
+                    {% endfor %}
+                </p>
+
+                <p>
+                    {{ form.confirm_password.label }}<br>
+                    {{ form.confirm_password(size=35) }}
+                    {% for error in form.confirm_password.errors %}
+                        <span class="error-message">{{ error }}</span>
+                    {% endfor %}
+                </p>
+                <p>
+                    {{ form.submit() }}
+                </p>
+            </fieldset>
+        </form>
+    </div>
+</div>
+{% endblock %}

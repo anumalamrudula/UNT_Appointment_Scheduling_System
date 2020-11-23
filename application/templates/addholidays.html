@@ -1,0 +1,48 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div>
+    <h3>Choose a date to set as Holiday</h3>   
+    <br>     
+    <form action="{{url_for('addHolidays')}}" method="POST">
+        <input placeholder="Date in YYYY-MM-DD" type="date" id="birthdaytime" name="holidayDate" required>
+        <script>
+            var today = new Date().toISOString().split('T')[0];
+            var x = document.getElementsByName("holidayDate")
+            for (var i = 0; i < (x.length); i++)                                     
+            {
+                x[i].setAttribute('min', today);
+            }                    
+        </script>
+        <input type="submit" class="button -green center" value="Add Holiday">
+    </form>
+    <br>
+    <br>
+    <h3>Holidays Added:</h3>    
+    <table class="table table-hover">
+        <thead>
+            <tr style="background-color:green;color:white">
+                <th scope="col">ID</th>
+                <th scope="col">Date</th>
+                <th scope="col">Remove as a Holiday</th>
+            </tr>
+        </thead>
+        <tbody>
+                {% for holiday in holidays %}
+                    <tr>
+                        <td scope='row'>{{ holiday["holiday_id"] }}</td>
+                        <td>{{ holiday["date"] }}</td>
+                        <td>
+                            <form action="{{url_for('addHolidays')}}" method="POST">                                
+                                <input type="hidden" name="deleteDate" value="{{holiday['date']}}">
+                                <input type="submit" class="button -green center" value="Remove">   
+                            </form>
+                        </td>
+                    </tr>
+                
+                {% endfor %} 
+            </form>
+        </tbody>
+    </table>
+</div>
+{% endblock %}
