@@ -7,6 +7,7 @@ Please navigate to this URL to view the deployed application:
 https://technocrats-untappointment.herokuapp.com/home
 
 Login Credentials: 
+
 Admin     - MrudulaAnumala@my.unt.edu, Password@123
 Student   - UntProfessor@unt.edu, Password@123
 Professor - hyunsook.do@unt.edu, Password@123
